@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+	<include resource="org/springframework/boot/logging/logback/defaults.xml" />
+	<springProperty scope="context" name="springAppName" source="spring.application.name" />
+	<!--  <springProperty scope="context" name="logpath" source="logging.path"/> -->
+	<property name="DEV_HOME" value="logs" />
+	<appender name="consoleAppender" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %5p [${springAppName},%X{X-B3-TraceId:-}] %m%n
+			</Pattern>
+		</encoder>
+		<!-- <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+			<level>DEBUG</level>
+		</filter> -->
+	</appender>
+	<!-- <appender name="dailyRollingFileAppenderForDebug"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+		<FileNamePattern>${DEV_HOME}/debugLogs/debug_log_%d{yyyy-MMM,aux}/debug_log_%d{yyyy-MM-dd}.log</FileNamePattern>
+		</rollingPolicy>
+
+		<encoder>
+			<Pattern>
+			%d{yyyy-MM-dd HH:mm:ss} [%thread] [%X{X-B3-TraceId:-}] %-5level %logger{0}.%M :%line - %msg %n
+			</Pattern>
+		</encoder>
+		<filter class="ch.qos.logback.classic.filter.LevelFilter">
+        <level>DEBUG</level>
+        <onMatch>ACCEPT</onMatch>
+        <onMismatch>DENY</onMismatch>
+        </filter>
+	</appender> -->
+	<appender name="dailyRollingFileAppenderForError"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<!-- rollover every minute -->
+			<FileNamePattern>${DEV_HOME}/errorLogs/error_log_%d{yyyy-MMM,aux}/error_log_%d{yyyy-MM-dd}.log</FileNamePattern>
+
+			<!-- keep 30 minutes' worth of history
+			<maxHistory>30</maxHistory> -->
+		</rollingPolicy>
+
+		<encoder>
+			<Pattern>
+				<!-- %-4relative [%thread] %-5level %logger{35} - %msg %n -->
+				%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] [%X{X-B3-TraceId:-}] %-5level %logger{35} - %msg %n
+			</Pattern>
+		</encoder>
+		<filter class="ch.qos.logback.classic.filter.LevelFilter">
+			<level>ERROR</level>
+			<onMatch>ACCEPT</onMatch>
+			<onMismatch>DENY</onMismatch>
+		</filter>
+	</appender>
+	<appender name="dailyRollingFileAppenderForInfo"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<!-- rollover every minute -->
+			<FileNamePattern>${DEV_HOME}/infoLogs/info_log_%d{yyyy-MMM,aux}/info_log_%d{yyyy-MM-dd}.log</FileNamePattern>
+
+			<!-- keep 30 minutes' worth of history
+			<maxHistory>30</maxHistory> -->
+		</rollingPolicy>
+
+		<encoder>
+			<Pattern>
+				<!-- %-4relative [%thread] %-5level %logger{35} - %msg %n -->
+				%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] [%X{X-B3-TraceId:-}] %-5level %logger{35} - %msg %n
+			</Pattern>
+		</encoder>
+		<filter class="ch.qos.logback.classic.filter.LevelFilter">
+			<level>INFO</level>
+			<onMatch>ACCEPT</onMatch>
+			<onMismatch>DENY</onMismatch>
+		</filter>
+	</appender>
+	<!-- <logger name="com.eoxys" additivity="false">
+		<level value="DEBUG" />
+		<appender-ref ref="dailyRollingFileAppenderForDebug" />
+		<appender-ref ref="consoleAppender" />
+	</logger> -->
+	<logger name="com.eoxys" additivity="false">
+		<level value="INFO" />
+		<appender-ref ref="dailyRollingFileAppenderForInfo" />
+		<!-- <appender-ref ref="consoleAppender" /> -->
+	</logger>
+
+	<root level="ERROR">
+  <appender-ref ref="dailyRollingFileAppenderForError"/>
+  <appender-ref ref="consoleAppender"/>
+</root>
+</configuration>
